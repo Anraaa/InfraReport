@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') !== 'local') {
             URL::forceScheme('https');
         }
-        $this->app->bind(LoginResponse::class, CustomLoginResponse::class);
+        //$this->app->bind(LoginResponse::class, CustomLoginResponse::class);
 
         URL::forceScheme('https'); 
         URL::forceRootUrl(config('app.url'));
