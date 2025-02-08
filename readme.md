@@ -16,6 +16,8 @@ Kalian dapat mencoba demo aplikasi di link berikut:
 - **Tailwind CSS** (Styling UI)
 - **MySQL** / **MariaDB** (Database)
 - **Docker & Docker Compose** (Pengelolaan container)
+- **Cloudinary** (Penyimpanan gambar berbasis cloud)
+
 
 ## 📜 Fitur Utama
 - Pengguna dapat membuat laporan dengan mudah.
