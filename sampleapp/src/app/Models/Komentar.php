@@ -19,23 +19,6 @@ class Komentar extends Model
         return $this->belongsTo(Pengaduan::class);
     }
 
-    protected static function booted()
-{
-    static::created(function ($komentar) {
-        event(new KomentarBaru($komentar));
-
-        $pengaduan = Pengaduan::find($komentar->pengaduan_id);
-        $admin = User::where('role', 'admin')->first(); // Ambil admin
-        if ($admin) {
-            $admin->notify(new KomentarNotification([
-                'user_name' => $komentar->user->name,
-                'pengaduan_id' => $komentar->pengaduan_id,
-                'pesan' => $komentar->pesan,
-            ]));
-        }
-    });
-}
-
     public function user()
     {
         return $this->belongsTo(User::class);
