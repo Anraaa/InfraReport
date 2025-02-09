@@ -23,6 +23,7 @@ use App\Http\Middleware\VerifyIsAdmin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Filament\Navigation\MenuItem;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
+use App\Notifications\KomentarNotification;
 
 
 
@@ -56,7 +57,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                Widgets\FilamentInfoWidget::class,            
             ])
             ->plugins([
                 FilamentApexChartsPlugin::make(),

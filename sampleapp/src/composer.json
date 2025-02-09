@@ -16,12 +16,14 @@
         "filament/widgets": "^3.2",
         "illuminate/queue": "*",
         "joaopaulolndev/filament-edit-profile": "^1.0",
+        "kreait/laravel-firebase": "^5.10",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "leandrocfe/filament-apex-charts": "^3.1",
         "livewire/livewire": "^3.5",
         "maatwebsite/excel": "^3.1",
         "oriondevelops/filament-greeter": "^0.2.2",
+        "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-permission": "^6.12"
     },
     "require-dev": {

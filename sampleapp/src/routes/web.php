@@ -39,6 +39,10 @@ Route::get('/debug-session', function () {
 });
 
 
+
+//Route::get('/sse/komentar', [SSEController::class, 'streamKomentar']);
+
+
 Route::get('/', function () {
     return view('welcome');
 });

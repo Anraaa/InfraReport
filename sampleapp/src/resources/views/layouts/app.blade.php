@@ -7,6 +7,7 @@
     <title>@yield('title', 'Welcome')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <!-- <script src="{{ mix('js/app.js') }}"></script> -->
     <link rel="stylesheet" href="{{ config('filament.assets_url') }}/forms/forms.css">
     @livewireStyles
 </head>

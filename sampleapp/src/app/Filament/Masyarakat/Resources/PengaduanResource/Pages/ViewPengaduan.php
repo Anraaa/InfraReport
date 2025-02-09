@@ -11,6 +11,8 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Hidden;
 use App\Models\Komentar;
 use Illuminate\Support\Facades\Auth;
+use App\Events\KomentarBaru;
+
 
 class ViewPengaduan extends ViewRecord
 {
@@ -30,7 +32,7 @@ class ViewPengaduan extends ViewRecord
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    Komentar::create($data);
+                    $komentar = Komentar::create($data);
                     $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
                 })
                 ->modalHeading('Tambah Komentar')

@@ -20,6 +20,8 @@
     "dependencies": {
         "@material-tailwind/html": "^2.3.2",
         "apexcharts": "^3.54.1",
-        "flowbite": "^3.1.1"
+        "flowbite": "^3.1.1",
+        "laravel-echo": "^1.19.0",
+        "pusher-js": "^8.4.0"
     }
 }
