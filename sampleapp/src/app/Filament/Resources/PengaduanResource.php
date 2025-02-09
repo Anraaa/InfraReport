@@ -127,6 +127,7 @@ class PengaduanResource extends Resource
                 }),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 DeleteAction::make()
                 ->label('Hapus Pengaduan')
                 ->visible(fn ($record) => $record->status === 'menunggu' && \Illuminate\Support\Facades\Auth::user()->hasRole('Admin')) // Menampilkan aksi hanya untuk admin dan jika status 'menunggu'
@@ -229,6 +230,7 @@ class PengaduanResource extends Resource
         return [
             'index' => Pages\ListPengaduans::route('/'),
             'create' => Pages\CreatePengaduan::route('/create'),
+            'view' => Pages\ViewPengaduan::route('/{record}'),
             //'edit' => Pages\EditPengaduan::route('/{record}/edit'),
         ];
     }

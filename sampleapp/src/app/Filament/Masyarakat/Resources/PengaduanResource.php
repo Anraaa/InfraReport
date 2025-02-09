@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Filament\Tables\Actions\DeleteAction;
 
+
+
 class PengaduanResource extends Resource
 {
     protected static ?string $model = Pengaduan::class;
@@ -122,6 +124,7 @@ class PengaduanResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 DeleteAction::make()
                 ->label('Hapus Pengaduan')
                 ->visible(fn ($record) => $record->status === 'menunggu') // Menampilkan aksi hanya untuk admin dan jika status 'menunggu'
@@ -151,6 +154,7 @@ class PengaduanResource extends Resource
         return [
             'index' => Pages\ListPengaduans::route('/'),
             'create' => Pages\CreatePengaduan::route('/create'),
+            'view' => Pages\ViewPengaduan::route('/{record}'),
             //'edit' => Pages\EditPengaduan::route('/{record}/edit'),
         ];
     }

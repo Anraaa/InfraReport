@@ -27,10 +27,9 @@ class Pengaduan extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    // Relasi ke Notifikasi
-    public function notifikasis()
+    public function komentar()
     {
-        return $this->hasMany(Notifikasi::class);
+        return $this->hasMany(Komentar::class);
     }
 
     protected static function booted()
