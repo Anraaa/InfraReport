@@ -5,7 +5,7 @@ InfraReport adalah platform sederhana untuk pelaporan yang cepat, aman, dan tran
 ## 🚀 Demo
 
 Kalian dapat mencoba demo aplikasi di link berikut:
-👉 [InfraReport Demo](https://basilisk-better-stork.ngrok-free.app/)
+👉 [InfraReport Demo](https://anra.my.id/)
 
 > **Catatan:** Jika link tidak dapat diakses, kemungkinan layanan ngrok sedang offline.
 

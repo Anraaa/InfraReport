@@ -11,6 +11,8 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Hidden;
 use App\Models\Komentar;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\HtmlEntry;
+
 
 class ViewPengaduan extends ViewRecord
 {
@@ -59,111 +61,146 @@ class ViewPengaduan extends ViewRecord
     protected function getKomentarSchema(): array
 {
     $komentars = Komentar::where('pengaduan_id', $this->record->id)
-        ->whereNull('parent_id') // Hanya komentar utama
-        ->with(['user', 'replies.user']) // Load user dan balasan
+        ->whereNull('parent_id') // Ambil hanya komentar utama
+        ->with(['user', 'replies.user']) // Load user & balasan
         ->get();
 
-    return $komentars->map(function ($komentar) {
-        return Components\Group::make([
-            Components\TextEntry::make('user.name')
-                ->label('Nama')
-                ->default($komentar->user->name),
-            Components\TextEntry::make('pesan')
-                ->label('Pesan')
-                ->default($komentar->pesan),
-            Components\TextEntry::make('created_at')
-                ->label('Dikirim Pada')
-                ->default($komentar->created_at->format('d-m-Y H:i')),
-
-            Components\Actions::make([
-                Components\Actions\Action::make('Balas')
-                    ->icon('heroicon-o-arrow-uturn-right')
-                    ->color('primary')
-                    ->modalHeading('Balas Komentar')
-                    ->form([
-                        Hidden::make('pengaduan_id')->default($this->record->id),
-                        Hidden::make('user_id')->default(Auth::id()),
-                        Hidden::make('parent_id')->default($komentar->id),
-                        Textarea::make('pesan')
-                            ->label('Tulis Balasan')
-                            ->placeholder('Masukkan balasan Anda...')
-                            ->required(),
-                    ])
-                    ->action(function (array $data) {
-                        Komentar::create($data);
-                        $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
-                    })
-                    ->visible(fn () => Auth::user()->hasRole('admin') || Auth::id() === $komentar->user_id),
-
-                Components\Actions\Action::make('Edit')
-                    ->icon('heroicon-o-pencil')
-                    ->color('info')
-                    ->modalHeading('Edit Komentar')
-                    ->form([
-                        Textarea::make('pesan')
-                            ->label('Edit Komentar')
+    return $komentars->flatMap(function ($komentar) {
+        return [
+            // Komentar utama (Masyarakat) di kiri
+            Components\Grid::make(2)
+                ->schema([
+                    Components\Group::make([
+                        Components\TextEntry::make('user.name')
+                            ->label('')
+                            ->default($komentar->user->name),
+                            //->color('gray'),
+                        
+                        Components\TextEntry::make('pesan')
+                            ->label('')
                             ->default($komentar->pesan)
-                            ->required(),
-                    ])
-                    ->action(function (array $data) use ($komentar) {
-                        $komentar->update(['pesan' => $data['pesan']]);
-                        $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
-                    }),
+                            //->color('gray')
+                            ->extraAttributes([
+                                'class' => 'bg-gray-100 dark:bg-gray-800 dark:text-white-100 rounded-lg p-2' , // Styling untuk chat bubble masyarakat
+                            ]),
 
-                Components\Actions\Action::make('Hapus')
-                    ->icon('heroicon-o-trash')
-                    ->color('danger')
-                    ->requiresConfirmation()
-                    ->action(function () use ($komentar) {
-                        $komentar->delete();
-                        $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
-                    }),
-            ]),
+                        Components\TextEntry::make('created_at')
+                            ->label('')
+                            ->default($komentar->created_at->format('d-m-Y H:i'))
+                            //->color('gray')
+                            ->size('sm'),
 
-            // Menampilkan balasan jika ada
+                        Components\Actions::make([
+                            Components\Actions\Action::make('Balas')
+                                ->icon('heroicon-o-arrow-uturn-right')
+                                ->color('warning')
+                                ->modalHeading('Balas Komentar')
+                                ->form([
+                                    Hidden::make('parent_id')->default($komentar->id),
+                                    Hidden::make('pengaduan_id')->default($komentar->pengaduan_id),
+                                    Hidden::make('user_id')->default(Auth::id()),
+                                    Textarea::make('pesan')
+                                        ->label('Balasan')
+                                        ->required(),
+                                ])
+                                ->action(function (array $data) {
+                                    Komentar::create($data);
+                                    $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
+                                })
+                                ->visible(fn () => Auth::user()->is_admin == true), // Hanya admin yang bisa membalas
+
+                            Components\Actions\Action::make('Edit')
+                                ->icon('heroicon-o-pencil')
+                                ->color('info')
+                                ->modalHeading('Edit Komentar')
+                                ->form([
+                                    Textarea::make('pesan')
+                                        ->label('Edit Komentar')
+                                        ->default($komentar->pesan)
+                                        ->required(),
+                                ])
+                                ->action(function (array $data) use ($komentar) {
+                                    $komentar->update(['pesan' => $data['pesan']]);
+                                    $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
+                                })
+                                ->visible(fn () => Auth::id() === $komentar->user_id), // Hanya pemilik komentar yang bisa edit
+
+                            Components\Actions\Action::make('Hapus')
+                                ->icon('heroicon-o-trash')
+                                ->color('danger')
+                                ->requiresConfirmation()
+                                ->action(function () use ($komentar) {
+                                    $komentar->delete();
+                                    $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
+                                })
+                                ->visible(fn () => Auth::id() === $komentar->user_id || Auth::user()->is_admin), // Admin atau pemilik bisa hapus
+                        ])
+                    ])->columnSpan(1), // Taruh komentar masyarakat di kolom kiri
+                    
+                    Components\Group::make([])->columnSpan(1), // Kosongkan kolom kanan untuk admin
+                ])
+                ->columnSpanFull(),
+
+            // Menampilkan balasan admin di sebelah kanan
             ...$komentar->replies->map(function ($reply) {
-                return Components\Group::make([
-                    Components\TextEntry::make('user.name')
-                        ->label('Nama (Balasan)')
-                        ->default($reply->user->name),
-                    Components\TextEntry::make('pesan')
-                        ->label('Balasan')
-                        ->default($reply->pesan),
-                    Components\TextEntry::make('created_at')
-                        ->label('Dikirim Pada')
-                        ->default($reply->created_at->format('d-m-Y H:i')),
-            
-                    Components\Actions::make([
-                        Components\Actions\Action::make('Edit')
-                            ->icon('heroicon-o-pencil')
-                            ->color('info')
-                            ->modalHeading('Edit Komentar')
-                            ->form([
-                                Textarea::make('pesan')
-                                    ->label('Edit Komentar')
-                                    ->default($reply->pesan)
-                                    ->required(),
+                return Components\Grid::make(2)
+                    ->schema([
+                        Components\Group::make([])->columnSpan(1), // Kosongkan kolom kiri untuk masyarakat
+
+                        Components\Group::make([
+                            Components\TextEntry::make('')
+                                ->label('')
+                                ->default('Admin') // Nama Admin fixed jadi "Admin"
+                                ->color('blue'),
+
+                            Components\TextEntry::make('pesan')
+                                ->label('')
+                                ->default($reply->pesan)
+                                ->color('blue')
+                                ->extraAttributes([
+                                    'class' => 'bg-gray-100 dark:bg-gray-800 dark:text-white-100 rounded-lg p-2' , // Styling untuk chat bubble admin
+                                ]),
+
+                            Components\TextEntry::make('created_at')
+                                ->label('')
+                                ->default($reply->created_at->format('d-m-Y H:i'))
+                                ->color('blue')
+                                ->size('sm'),
+
+                            Components\Actions::make([
+                                Components\Actions\Action::make('Edit')
+                                    ->icon('heroicon-o-pencil')
+                                    ->color('info')
+                                    ->modalHeading('Edit Balasan')
+                                    ->form([
+                                        Textarea::make('pesan')
+                                            ->label('Edit Balasan')
+                                            ->default($reply->pesan)
+                                            ->required(),
+                                    ])
+                                    ->action(function (array $data) use ($reply) {
+                                        $reply->update(['pesan' => $data['pesan']]);
+                                        $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
+                                    })
+                                    ->visible(fn () => Auth::user()->is_admin == true), 
+
+                                Components\Actions\Action::make('Hapus')
+                                    ->icon('heroicon-o-trash')
+                                    ->color('danger')
+                                    ->requiresConfirmation()
+                                    ->action(function () use ($reply) {
+                                        $reply->delete();
+                                        $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
+                                    })
+                                    ->visible(fn () => Auth::user()->is_admin == true), 
                             ])
-                            ->action(function (array $data) use ($reply) {
-                                $reply->update(['pesan' => $data['pesan']]);
-                                $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
-                            })
-                            ->visible(fn () => Auth::user()->hasRole('admin') || Auth::id() === $reply->user_id),
-            
-                        Components\Actions\Action::make('Hapus')
-                            ->icon('heroicon-o-trash')
-                            ->color('danger')
-                            ->requiresConfirmation()
-                            ->action(function () use ($reply) {
-                                $reply->delete();
-                                $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record->getKey()]));
-                            })
-                            ->visible(fn () => Auth::user()->hasRole('admin') || Auth::id() === $reply->user_id),
-                    ]),
-                ]);
-            })->toArray(),            
-        ]);
+                        ])->columnSpan(1), // Taruh balasan admin di kolom kanan
+                    ])
+                    ->columnSpanFull();
+            })->toArray(),
+        ];
     })->toArray();
 }
+
 
 }
