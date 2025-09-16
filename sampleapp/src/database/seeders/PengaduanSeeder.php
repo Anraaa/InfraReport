@@ -2,51 +2,29 @@
 
 namespace Database\Seeders;
 
-use App\Models\Pengaduan;
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
+use App\Models\User;       // <-- Pastikan di-import
+use App\Models\Pengaduan;  // <-- Pastikan di-import
 
 class PengaduanSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        $faker = Faker::create();
+        // 1. Ambil semua ID dari user yang sudah ada di database.
+        $userIds = User::pluck('id')->toArray();
 
-        // Daftar status yang digunakan
-        $statuses = ['menunggu', 'diteruskan', 'ditolak'];
-
-        // User ID 2 dan 3
-        $userIds = [3, 4, 5, 6, 7, 8];
-
-        // Buat 35 pengaduan
-        for ($i = 1; $i <= 100; $i++) {
-            $status = '';
-            if ($i <= 31) {
-                // 7 pengaduan dengan status 'menunggu'
-                $status = 'menunggu';
-            } elseif ($i <= 43) {
-                // 9 pengaduan dengan status 'diteruskan'
-                $status = 'diteruskan';
-            } else {
-                // Sisanya pengaduan dengan status 'ditolak'
-                $status = 'ditolak';
-            }
-
-            // Pilih user secara acak
-            $userId = $userIds[array_rand($userIds)];
-
-            // Buat data pengaduan
-            Pengaduan::updateOrCreate([
-                'user_id' => $userId,
-                'judul' => $faker->sentence(),
-                'deskripsi' => $faker->paragraph(),
-                'lokasi' => $faker->address(),
-                'foto' => 'uploads/' . $faker->imageUrl(640, 480, 'cats', true),
-                'status' => $status,
-                'created_at' => $faker->dateTimeBetween('2024-01-11', '2025-02-05'),
-                'updated_at' => now(),
-            ]);
+        // Pengecekan keamanan: jika tidak ada user, jangan jalankan seeder ini.
+        if (empty($userIds)) {
+            $this->command->info('Tidak ada user, seeder pengaduan dilewati.');
+            return;
         }
+
+        // 2. Gunakan factory untuk membuat 20 data pengaduan palsu.
+        Pengaduan::factory(20)->make()->each(function ($pengaduan) use ($userIds) {
+            
+            // 3. Untuk setiap pengaduan, pilih user_id acak DARI DAFTAR ID YANG VALID.
+            $pengaduan->user_id = $userIds[array_rand($userIds)];
+            $pengaduan->save();
+        });
     }
 }

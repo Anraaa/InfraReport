@@ -10,6 +10,7 @@
         "afatmustafa/filamentv3-turnstile": "^1.1",
         "amendozaaguiar/filament-route-statistics": "^3.0",
         "andreia/filament-nord-theme": "^1.0",
+        "bezhansalleh/filament-shield": "^3.9",
         "cloudinary-labs/cloudinary-laravel": "^2.2",
         "filament/filament": "^3.2",
         "filament/notifications": "^3.2",

@@ -13,12 +13,12 @@ class RoleSeeder extends Seeder
     public function run(): void 
     {
         // Ensure roles exist
-        $masyarakatRole = Role::firstOrCreate(['name' => 'Masyarakat', 'guard_name' => 'web']);
         $adminRole = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+        $masyarakatRole = Role::firstOrCreate(['name' => 'Masyarakat', 'guard_name' => 'web']);
         
         // Assign roles to specific users based on email
         $masyarakatUser = User::where('email', 'warga@kelurahan.com')->first();
-        $adminUser = User::where('email', 'admin@kelurahan.com')->first();
+        $adminUser = User::where('email', 'admin@admin.com')->first();
 
         if ($masyarakatUser) {
             $masyarakatUser->assignRole($masyarakatRole);
