@@ -5,9 +5,7 @@ InfraReport adalah platform sederhana untuk pelaporan yang cepat, aman, dan tran
 ## 🚀 Demo
 
 Kalian dapat mencoba demo aplikasi di link berikut:
-👉 [InfraReport Demo](https://anra.my.id/)
-
-> **Catatan:** Jika link tidak dapat diakses, kemungkinan layanan ngrok sedang offline.
+👉 (tidak tersedia)
 
 ## 🔧 Teknologi yang Digunakan
 - **PHP** (Backend utama)
@@ -26,45 +24,64 @@ Kalian dapat mencoba demo aplikasi di link berikut:
 - UI yang responsif dengan Tailwind CSS.
 - Sistem berbasis Laravel dengan keamanan yang lebih baik.
 
-## 📦 Instalasi
+📦 Instalasi
+Jika ingin menjalankan proyek ini secara lokal, ikuti langkah-langkah berikut.
 
-Jika ingin menjalankan proyek ini secara lokal, ikuti langkah berikut:
+📋 Prasyarat
+Git
 
-### 1️⃣ Clone Repository & Masuk Direktori SampleApp
-```sh
+Docker & Docker Compose
+
+1️⃣ Clone Repository & Siapkan Konfigurasi
+Bash
+
+# Clone repository
 git clone <repo_url>
+
+# Masuk ke direktori utama
 cd infrareport
+
+# Masuk ke direktori aplikasi
 cd sampleapp
-```
 
-### 2️⃣ Build & Jalankan Docker
-```sh
-docker compose up -d --build
-```
-
-### 3️⃣ Buat & Konfigurasi Environment
-Salin file `.env.example` menjadi `.env` lalu atur konfigurasi database.
-```sh
+# Salin file environment. Langkah ini penting sebelum menyalakan Docker
+# agar database terinisialisasi dengan benar.
 cp .env.example .env
-```
+Setelah menyalin, buka file .env dan sesuaikan konfigurasi database (DB_DATABASE, DB_USERNAME, DB_PASSWORD) agar cocok dengan environment di file docker-compose.yml Anda.
 
-### 4️⃣ Install Dependencies
-```sh
-composer install
-npm install
-```
+2️⃣ Build & Jalankan Container Docker
+Perintah ini akan membangun image dan menyalakan semua layanan (Nginx, PHP, MariaDB) di latar belakang.
 
-### 5️⃣ Generate Key & Migrate Database
-```sh
-php artisan key:generate
-php artisan migrate --seed
-```
+Bash
 
-### 6️⃣ Jalankan Aplikasi
-```sh
-php artisan serve
-```
-Akses aplikasi di `http://localhost`
+docker compose up -d --build
+3️⃣ Jalankan Perintah Setup di Dalam Container
+Semua perintah composer dan artisan harus dijalankan di dalam container PHP (sample).
+
+Bash
+
+# Install dependensi PHP
+docker exec -it sample composer install
+
+# Generate kunci aplikasi Laravel
+docker exec -it sample php artisan key:generate
+
+# Buat link dari storage ke folder public
+docker exec -it sample php artisan storage:link
+
+# Jalankan migrasi dan seeding database
+docker exec -it sample php artisan migrate --seed
+4️⃣ Atur Izin Akses Folder
+Ini adalah langkah krusial untuk menghindari error 500. Perintah ini memberikan izin kepada server untuk menulis file log dan cache.
+
+Bash
+
+docker exec -it sample chown -R www-data:www-data storage bootstrap/cache
+5️⃣ Selesai! Akses Aplikasi
+Sekarang Anda bisa membuka browser dan mengakses aplikasi di:
+👉 http://localhost
+
+---
 
 ## 📌 Catatan
 - **Akses Admin:** Tidak tersedia untuk umum dalam demo.
