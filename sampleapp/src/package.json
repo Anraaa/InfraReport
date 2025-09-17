@@ -4,7 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "vercel-build": "echo 'Build script started.' && mkdir -p /tmp/storage/framework/sessions /tmp/storage/framework/views /tmp/storage/framework/cache/data /tmp/storage/logs /tmp/bootstrap/cache && echo 'Writable directories created.' && composer install --no-dev --optimize-autoloader --no-scripts && echo 'Composer install finished (no scripts).' && php artisan package:discover --ansi && php artisan key:generate --force --ansi && echo 'Artisan discover/key finished.' && php artisan config:cache && php artisan route:cache && php artisan view:cache && echo 'Build finished successfully!'"
+        "vercel-build": "echo 'Build script started.' && mkdir -p /tmp/storage/framework/sessions /tmp/storage/framework/views /tmp/storage/framework/cache/data /tmp/storage/logs /tmp/bootstrap/cache && echo 'Writable directories created.' && composer install --no-dev --optimize-autoloader --no-scripts && echo 'Composer install finished.' && php artisan package:discover --ansi && php artisan key:generate --force --ansi && php artisan config:cache && php artisan route:cache && php artisan view:cache && echo 'Build finished successfully!'"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.10",
