@@ -80,7 +80,7 @@
             "rm -rf bootstrap/cache/*",
             "php artisan config:cache --env=production",
             "php artisan route:cache --env=production",
-            "php artisan view:cache --env=production",
+            "php artisan view:cache --env=production"
         ]
     },
     "extra": {
