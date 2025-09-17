@@ -3,7 +3,7 @@
     "builds": [
         {
             "src": "public/index.php",
-            "use": "github:juicyfx/vercel-php"
+            "use": "vercel-php@0.7.0"
         },
         {
             "src": "public/**",
