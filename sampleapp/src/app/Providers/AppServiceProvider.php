@@ -28,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Contracts\Queue\Monitor::class,
         \Illuminate\Queue\QueueManager::class
     );
+
+    if (isset($_ENV['VERCEL'])) {
+        $this->app->useStoragePath($_ENV['VERCEL_TMP_DIR'] . '/storage');
+    }
+    
     }
 
     /**
@@ -46,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
         URL::forceRootUrl(config('app.url'));
 
         User::observe(UserObserver::class);
+
+
 
     }
 }
