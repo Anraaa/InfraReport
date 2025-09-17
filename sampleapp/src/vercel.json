@@ -3,7 +3,7 @@
     "builds": [
         {
             "src": "public/index.php",
-            "use": "github:vercel-community/php"
+            "use": "@ardent-data/vercel-php"
         },
         {
             "src": "public/**",
