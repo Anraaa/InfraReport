@@ -1,4 +1,4 @@
-InfraReport
+# InfraReport
 InfraReport adalah platform sederhana untuk pelaporan yang cepat, aman, dan transparan. Proyek ini dibuat sebagai media pembelajaran, mengimplementasikan teknologi modern untuk membangun sistem pengaduan yang lebih efisien.
 
 🚀 Demo
@@ -7,29 +7,19 @@ Kalian dapat mencoba demo aplikasi di link berikut:
 
 🔧 Teknologi yang Digunakan
 PHP (Backend utama)
-
-Laravel (Framework PHP)
-
-FilamentPHP (Dashboard Admin)
-
-Tailwind CSS (Styling UI)
-
-MySQL / MariaDB (Database)
-
-Docker & Docker Compose (Pengelolaan container)
-
-Cloudinary (Penyimpanan gambar berbasis cloud)
+- Laravel (Framework PHP)
+- FilamentPHP (Dashboard Admin)
+- Tailwind CSS (Styling UI)
+- MySQL / MariaDB (Database)
+- Docker & Docker Compose(Pengelolaan container)
+- Cloudinary (Penyimpanan gambar berbasis cloud)
 
 📜 Fitur Utama
-Pengguna dapat membuat laporan dengan mudah.
-
-Status laporan dapat dipantau secara real-time.
-
-Admin dapat mengelola laporan dan memberikan tanggapan.
-
-UI yang responsif dengan Tailwind CSS.
-
-Sistem berbasis Laravel dengan keamanan yang lebih baik.
+- Pengguna dapat membuat laporan dengan mudah.
+- Status laporan dapat dipantau secara real-time.
+- Admin dapat mengelola laporan dan memberikan tanggapan.
+- UI yang responsif dengan Tailwind CSS.
+- Sistem berbasis Laravel dengan keamanan yang lebih baik.
 
 📦 Instalasi
 Jika ingin menjalankan proyek ini secara lokal, ikuti langkah-langkah berikut.
@@ -40,10 +30,8 @@ Git
 Docker & Docker Compose
 
 1️⃣ Clone Repository & Siapkan Konfigurasi
-Bash
-
-# Clone repository
 ```
+# Clone repository
 git clone <repo_url>
 
 # Masuk ke direktori utama dan direktori aplikasi
