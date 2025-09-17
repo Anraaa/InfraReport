@@ -18,13 +18,6 @@ Route::get('/about-me', function () {
 Route::get('/company', function () {
     return view('company');
 })->name('company');
-
-Route::get('/clear-auth', function () {
-    \Illuminate\Support\Facades\Auth::logout();
-    session()->flush();
-    return redirect('/masyarakat/login');
-});
-
 Route::get('storage/{file}', function ($file) {
     // Akses file dengan middleware auth
 })->middleware('auth');
