@@ -1,27 +1,22 @@
 #!/bin/bash
-
-# Exit immediately if a command exits with a non-zero status.
 set -e
 
-echo "Build script started..."
+echo "Build script started."
 
-# 1. Create all necessary writable directories inside /tmp
-echo "Creating writable directories in /tmp..."
-mkdir -p /tmp/storage/framework/sessions
-mkdir -p /tmp/storage/framework/views
-mkdir -p /tmp/storage/framework/cache/data
-mkdir -p /tmp/storage/logs
-mkdir -p /tmp/bootstrap/cache
+echo "Checkpoint 1: Creating writable directories..."
+mkdir -p /tmp/storage/framework/sessions /tmp/storage/framework/views /tmp/storage/framework/cache/data /tmp/storage/logs /tmp/bootstrap/cache
+echo "Checkpoint 2: Directories created."
 
-# 2. Run Composer to install dependencies
-echo "Running Composer install..."
+echo "Checkpoint 3: Starting Composer install..."
 composer install --no-dev --optimize-autoloader
+echo "Checkpoint 4: Composer install finished."
 
-# 3. Run Artisan commands
-# It is now safe to run config:cache because the bootstrap/cache path is writable
-echo "Running Artisan commands..."
+echo "Checkpoint 5: Starting Artisan commands..."
 php artisan config:cache
+echo "Checkpoint 6: config:cache finished."
 php artisan route:cache
+echo "Checkpoint 7: route:cache finished."
 php artisan view:cache
+echo "Checkpoint 8: view:cache finished."
 
 echo "Build finished successfully!"
