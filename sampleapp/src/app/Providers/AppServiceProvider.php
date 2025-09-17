@@ -32,7 +32,15 @@ class AppServiceProvider extends ServiceProvider
     if (isset($_ENV['VERCEL'])) {
         $this->app->useStoragePath($_ENV['VERCEL_TMP_DIR'] . '/storage');
     }
-    
+
+    if (env('VERCEL_ENV')) {
+        // Arahkan path storage utama ke direktori /tmp
+        $this->app->useStoragePath(env('VERCEL_TMP_DIR') . '/storage');
+
+        // Arahkan path bootstrap/cache ke direktori /tmp
+        $this->app->useBootstrapPath(env('VERCEL_TMP_DIR') . '/bootstrap/cache');
+    }
+
     }
 
     /**
