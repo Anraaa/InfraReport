@@ -35,51 +35,59 @@ Docker & Docker Compose
 1️⃣ Clone Repository & Siapkan Konfigurasi
 Bash
 
-# Clone repository
-git clone <repo_url>
+### Clone repository
+`git clone <repo_url>`
 
-# Masuk ke direktori utama
-cd infrareport
+### Masuk ke direktori utama
+`cd infrareport`
 
-# Masuk ke direktori aplikasi
-cd sampleapp
+### Masuk ke direktori aplikasi
+`cd sampleapp`
 
-# Salin file environment. Langkah ini penting sebelum menyalakan Docker
+### Salin file environment. Langkah ini penting sebelum menyalakan Docker
 # agar database terinisialisasi dengan benar.
+```
 cp .env.example .env
 Setelah menyalin, buka file .env dan sesuaikan konfigurasi database (DB_DATABASE, DB_USERNAME, DB_PASSWORD) agar cocok dengan environment di file docker-compose.yml Anda.
+```
 
 2️⃣ Build & Jalankan Container Docker
 Perintah ini akan membangun image dan menyalakan semua layanan (Nginx, PHP, MariaDB) di latar belakang.
 
 Bash
 
-docker compose up -d --build
+`docker compose up -d --build`
 3️⃣ Jalankan Perintah Setup di Dalam Container
 Semua perintah composer dan artisan harus dijalankan di dalam container PHP (sample).
 
-Bash
+### Install dependensi PHP
 
-# Install dependensi PHP
-docker exec -it sample composer install
+```
+docker exec -it sample bash
+composer install
+```
 
-# Generate kunci aplikasi Laravel
-docker exec -it sample php artisan key:generate
+### Generate kunci aplikasi Laravel
+`php artisan key:generate`
 
 # Buat link dari storage ke folder public
-docker exec -it sample php artisan storage:link
+`php artisan storage:link`
 
 # Jalankan migrasi dan seeding database
-docker exec -it sample php artisan migrate --seed
+`php artisan migrate --seed`
+
 4️⃣ Atur Izin Akses Folder
 Ini adalah langkah krusial untuk menghindari error 500. Perintah ini memberikan izin kepada server untuk menulis file log dan cache.
 
-Bash
 
-docker exec -it sample chown -R www-data:www-data storage bootstrap/cache
+docker exec -it sample 
+```
+chown -R www-data:www-data storage/* 
+chown -R www-data:www-data bootstrap/cache
+```
+
 5️⃣ Selesai! Akses Aplikasi
-Sekarang Anda bisa membuka browser dan mengakses aplikasi di:
-👉 http://localhost
+Sekarang Anda bisa membuka browser dan mengakses website
 
 ---
 
